@@ -1,0 +1,187 @@
+import { useEffect, useState, useMemo } from "react";
+import axios from "axios";
+import React from "react";
+import { FaSun, FaMoon, FaCloudSun, FaCloudMoon, FaClock } from "react-icons/fa";
+
+
+  
+const PrayerTimes = () => {
+  const [prayers, setPrayers] = useState({});
+  const [currentTime, setCurrentTime] = useState(new Date());
+  const [nextPrayer, setNextPrayer] = useState(null);
+  const [remainingTime, setRemainingTime] = useState("");
+  const [loading, setLoading] = useState(true);
+
+  const prayerNames = useMemo(() => ({
+    Fajr: "الفجر",
+    Sunrise: "الشروق",
+    Dhuhr: "الظهر",
+    Asr: "العصر",
+    Maghrib: "المغرب",
+    Isha: "العشاء",
+  }), []);
+
+  useEffect(() => {
+    const fetchPrayerTimes = async () => {
+      try {
+        setLoading(true);
+        let cachedData = localStorage.getItem("prayerTimes");
+        if (cachedData) {
+          setPrayers(JSON.parse(cachedData));
+          setLoading(false);
+        } else {
+          const response = await axios.get("https://api.aladhan.com/v1/timingsByCity?city=Cairo&country=EG&method=2");
+          setPrayers(response.data.data.timings);
+          localStorage.setItem("prayerTimes", JSON.stringify(response.data.data.timings));
+          setLoading(false);
+        }
+      } catch (err) {
+        console.error("Error fetching prayer times", err);
+        setLoading(false);
+      }
+    };
+
+    fetchPrayerTimes();
+  }, []);
+
+  useEffect(() => {
+    const updateTime = () => {
+      setCurrentTime(new Date());
+    };
+
+    const interval = setTimeout(updateTime, 1000);
+    return () => clearTimeout(interval);
+  }, [currentTime]);
+
+  useEffect(() => {
+    if (!Object.keys(prayers).length) return;
+  
+    const prayerTimes = Object.entries(prayers)
+      .filter(([key]) => prayerNames[key])
+      .map(([key, time]) => {
+        const [hour, minute] = time.split(":").map(Number);
+        const prayerTime = new Date();
+        prayerTime.setHours(hour, minute, 0, 0);
+        
+        // إذا كانت الصلاة هي الفجر، اجعلها في اليوم التالي عند الحاجة
+        if (key === "Fajr" && prayerTime < currentTime) {
+          prayerTime.setDate(prayerTime.getDate() + 1);
+        }
+  
+        return { name: prayerNames[key], time, key, prayerTime };
+      });
+  
+    const now = new Date();
+    let upcomingPrayer = null;
+    let minDiff = Number.MAX_SAFE_INTEGER;
+  
+    prayerTimes.forEach((prayer) => {
+      const diff = prayer.prayerTime - now;
+      if (diff > 0 && diff < minDiff) {
+        minDiff = diff;
+        upcomingPrayer = prayer;
+      }
+    });
+  
+    if (upcomingPrayer) {
+      setNextPrayer(upcomingPrayer);
+      const updateRemainingTime = () => {
+        const now = new Date();
+        const diff = upcomingPrayer.prayerTime - now;
+        if (diff > 0) {
+          const hours = Math.floor(diff / (1000 * 60 * 60));
+          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          setRemainingTime(
+            hours > 10 ? `${hours} ساعة${minutes} دقيقة` :
+            hours >= 3 ? `${hours} ساعات${minutes} دقيقة` :
+            hours > 0 ? `${hours} ساعة${minutes} دقيقة` :
+            minutes > 0 ? `${minutes} دقائق` :
+            "الآن"
+          );
+        } else {
+          setRemainingTime("الآن");
+        }
+      };
+  
+      updateRemainingTime();
+      const interval = setTimeout(updateRemainingTime, 1000);
+      return () => clearTimeout(interval);
+    }
+  }, [prayers, currentTime, prayerNames]);
+  
+
+
+  const getPrayerIcon = (key) => {
+    switch (key) {
+      case "Fajr":
+        return <FaCloudMoon className="text-blue-500" />;
+      case "Sunrise":
+        return <FaSun className="text-yellow-500" />;
+      case "Dhuhr":
+        return <FaCloudSun className="text-orange-500" />;
+      case "Asr":
+        return <FaSun className="text-red-500" />;
+      case "Maghrib":
+        return <FaCloudMoon className="text-purple-500" />;
+      case "Isha":
+        return <FaMoon className="text-indigo-500" />;
+      default:
+        return <FaClock />;
+    }
+  };
+
+  return (
+    <div >
+      <div >
+        {/* العنوان الرئيسي */}
+        <h1 className="text-3xl font-bold text-indigo-700 mb-4">🕌 أوقات الصلاة</h1>
+
+        {/* حالة التحميل */}
+        {loading ? (
+          <p className="text-lg font-semibold text-gray-700">⏳ جاري تحميل أوقات الصلاة...</p>
+        ) : (
+          <>
+            {/* الوقت الحالي */}
+            <div className="bg-gray-200 p-3 rounded-xl mb-4">
+              <p className="text-xl font-semibold text-gray-800">
+                ⏰ الوقت الآن: {currentTime.toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+              </p>
+            </div>
+
+            {/* الصلاة القادمة */}
+            {nextPrayer && (
+              <div className="bg-green-200 p-4 rounded-xl shadow-md mb-4">
+                <p className="text-lg font-bold text-green-800">🕰️ الصلاة القادمة: {nextPrayer.name} بعد {remainingTime}</p>
+              </div>
+            )}
+
+            {/* قائمة أوقات الصلاة */}
+            <ul className="space-y-4">
+              {Object.entries(prayers)
+                .filter(([key]) => prayerNames[key])
+                .map(([key, value]) => (
+                  <li
+                    key={key}
+                    className="flex items-center justify-between bg-indigo-100 p-3 rounded-xl shadow-sm"
+                  >
+                    <span className="text-lg font-semibold text-indigo-800 flex items-center gap-2">
+                      {getPrayerIcon(key)}
+                      {prayerNames[key]}
+                    </span>
+                    <span className="text-lg font-bold text-gray-900">{value}</span>
+                  </li>
+                ))}
+            </ul>
+
+            {/* ملاحظة */}
+            <div className="mt-6 text-gray-600">
+              <p>✨ اللهم اجعلنا من المحافظين على الصلاة 🙏</p>
+            </div>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default PrayerTimes;

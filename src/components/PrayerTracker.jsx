@@ -155,12 +155,12 @@ const PrayerTracker = () => {
                   prayers[prayer]?.completed
                     ? "bg-green-500 text-white"
                     : isPrayerTimePassed(prayer)
-                    ? "bg-blue-500 hover:bg-blue-600 text-white"
+                    ? "bg-blue-500 hover:bg-blue-600 text-white cursor-pointer"
                     : "bg-gray-200 text-gray-500 cursor-not-allowed"
                 }`}
               >
                 {prayers[prayer]?.completed ? (
-                  <span className="flex items-center gap-2">
+                  <span className="flex items-center gap-2 ">
                     <CheckCircle2 className="w-4 h-4" />
                     تم
                   </span>

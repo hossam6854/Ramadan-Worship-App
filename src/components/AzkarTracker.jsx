@@ -109,7 +109,7 @@ const AzkarTracker = () => {
           <button
             key={key}
             onClick={() => setActiveCategory(key)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer transition-all ${
               activeCategory === key
                 ? "bg-green-500 text-white shadow-lg scale-105"
                 : "bg-white text-gray-700 shadow hover:shadow-md"
@@ -170,7 +170,7 @@ const AzkarTracker = () => {
                 className={`px-4 py-2 rounded-lg transition-all ${
                   azkar[activeCategory]?.[index]
                     ? "bg-green-500 text-white"
-                    : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50"
+                    : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer"
                 }`}
               >
                 {azkar[activeCategory]?.[index] ? "✓ تم" : "إتمام"}

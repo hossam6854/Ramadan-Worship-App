@@ -65,7 +65,7 @@ const DailyChallenge = () => {
       {!completed ? (
         <button
           onClick={handleComplete}
-          className="mt-4 bg-white text-green-600 font-bold px-4 py-2 rounded-lg shadow-md hover:bg-gray-100 transition duration-300"
+          className="mt-4 bg-white text-green-600 font-bold px-4 py-2 rounded-lg shadow-md hover:bg-gray-100 transition duration-300 cursor-pointer"
         >
           ✅ أتممت التحدي!
         </button>

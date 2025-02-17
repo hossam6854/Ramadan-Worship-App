@@ -1,11 +1,20 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { BookOpen, ArrowDown, Landmark } from "lucide-react";
 import CountdownTimer from "../components/CountdownTimer";
 import PrayerTimes from "../components/PrayerTimes";
 import DailyQuote from "../components/DailyQuote";
+import { useRef, React} from "react";
 
 const Home = () => {
+
+  const prayerTimesRef = useRef(null);
+
+  const handleScroll = () => {
+    if (prayerTimesRef.current) {
+      prayerTimesRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-10">
       <div className="container mx-auto px-6">
@@ -36,8 +45,8 @@ const Home = () => {
          {/* زر النزول إلى أوقات الصلاة */}
          <div className="text-center mt-6">
             <a
-              href="#prayer-times"
-              className="inline-flex items-center px-4 py-2 mb-4 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+              onClick={handleScroll}
+              className="inline-flex items-center px-4 py-2 mb-4 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer"
               >
               <ArrowDown className="h-6 w-6" />
               الذهاب إلى أوقات الصلاة
@@ -69,7 +78,7 @@ const Home = () => {
 
           {/* أوقات الصلاة */}
           <section
-            id="prayer-times"
+            ref={prayerTimesRef} id="prayer-times"
             className="bg-white shadow-lg rounded-2xl p-6 border-t-4 border-blue-400 mt-10"
           >
             <h2 className="text-3xl font-semibold text-blue-700 mb-4">

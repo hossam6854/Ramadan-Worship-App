@@ -12,6 +12,7 @@ const PrayerTimes = () => {
   const [remainingTime, setRemainingTime] = useState("");
   const [loading, setLoading] = useState(true);
 
+
   const prayerNames = useMemo(() => ({
     Fajr: "الفجر",
     Sunrise: "الشروق",
@@ -21,18 +22,23 @@ const PrayerTimes = () => {
     Isha: "العشاء",
   }), []);
 
+  
   useEffect(() => {
     const fetchPrayerTimes = async () => {
       try {
         setLoading(true);
+        const today = new Date().toISOString().split('T')[0]; // الحصول على التاريخ الحالي بصيغة YYYY-MM-DD
         let cachedData = localStorage.getItem("prayerTimes");
-        if (cachedData) {
+        let cachedDate = localStorage.getItem("prayerTimesDate");
+  
+        if (cachedData && cachedDate === today) {
           setPrayers(JSON.parse(cachedData));
           setLoading(false);
         } else {
-          const response = await axios.get("https://api.aladhan.com/v1/timingsByCity?city=Cairo&country=EG&method=2");
+          const response = await axios.get("https://api.aladhan.com/v1/timingsByCity?city=Cairo&country=Egypt&method=5");
           setPrayers(response.data.data.timings);
           localStorage.setItem("prayerTimes", JSON.stringify(response.data.data.timings));
+          localStorage.setItem("prayerTimesDate", today); // حفظ التاريخ الحالي
           setLoading(false);
         }
       } catch (err) {
@@ -40,9 +46,25 @@ const PrayerTimes = () => {
         setLoading(false);
       }
     };
-
+  
     fetchPrayerTimes();
+  
+    // تحديد وقت منتصف الليل للتحقق من التحديثات
+    const now = new Date();
+    const midnight = new Date(now);
+    midnight.setHours(24, 0, 0, 0); // ضبط الوقت إلى منتصف الليل
+    const timeUntilMidnight = midnight - now;
+  
+    // جدولة التحقق من التحديثات في منتصف الليل
+    const midnightUpdate = setTimeout(() => {
+      fetchPrayerTimes();
+    }, timeUntilMidnight);
+  
+    // تنظيف الـ timeout عند إلغاء التثبيت
+    return () => clearTimeout(midnightUpdate);
   }, []);
+
+
 
   useEffect(() => {
     const updateTime = () => {

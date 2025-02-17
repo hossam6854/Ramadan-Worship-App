@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState, useCallback } from "react";
 import { WorshipContext } from "../context/WorshipContext";
-import { format, formatDistanceToNow, parseISO, set } from "date-fns";
+import { format, formatDistanceToNow, set } from "date-fns";
 import { ar } from "date-fns/locale";
 import { AlertCircle, CheckCircle2, Clock } from "lucide-react";
 import React from "react";

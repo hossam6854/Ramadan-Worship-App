@@ -1,6 +1,6 @@
 import { createContext, useState, useEffect, useCallback } from "react";
 import axios from "axios";
-import { format, set, isToday, startOfDay, endOfDay } from "date-fns";
+import { format, set } from "date-fns";
 import { useDebounce } from "use-debounce";
 import React from "react";
 
@@ -91,14 +91,7 @@ export const WorshipProvider = ({ children }) => {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.get("https://api.aladhan.com/v1/timingsByCity", {
-        params: {
-          city: "Cairo",
-          country: "EG",
-          method: 2,
-          date: format(new Date(), "dd-MM-yyyy"),
-        },
-      });
+      const response = await axios.get("https://api.aladhan.com/v1/timingsByCity?city=Cairo&country=Egypt&method=5");
 
       const timings = response.data.data.timings;
       const formattedTimes = {
@@ -121,6 +114,30 @@ export const WorshipProvider = ({ children }) => {
   useEffect(() => {
     fetchPrayerTimes();
   }, [fetchPrayerTimes]);
+
+
+  useEffect(() => {
+    const fetchPrayerTimes = () => {
+        setLoading(true);
+        let cachedData = localStorage.getItem("prayerTimes");
+        const timings = cachedData ? JSON.parse(cachedData) : {};
+      const formattedTimes = {
+        fajr: timings.Fajr,
+        dhuhr: timings.Dhuhr,
+        asr: timings.Asr,
+        maghrib: timings.Maghrib,
+        isha: timings.Isha,
+      };
+      setPrayerTimes(formattedTimes);
+        setLoading(false);
+
+    };
+  
+    fetchPrayerTimes();
+  
+  
+  }, []);
+
 
   useEffect(() => {
     localStorage.setItem("currentPrayers", JSON.stringify(debouncedPrayers));

@@ -45,7 +45,7 @@ function QuranApp() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div className="lg:col-span-1 h-[calc(100vh-12rem)] flex flex-col">
+          <div >
             {showBookmarks ? <BookmarksList /> : <SurahList />}
           </div>
 

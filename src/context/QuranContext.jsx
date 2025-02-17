@@ -4,14 +4,20 @@ import { useDebounce } from 'use-debounce';
 const QuranContext = createContext(null);
 
 export const QuranProvider = ({ children }) => {
-  const [selectedSurah, setSelectedSurah] = useState(() => {
+  const [selectedSurah, setSelectedSurahState] = useState(() => {
     try {
-      const saved = localStorage.getItem('selectedSurah');
+      const saved = localStorage.getItem("selectedSurah");
       return saved ? JSON.parse(saved) : null;
     } catch {
       return null;
     }
   });
+  
+  const setSelectedSurah = (surah) => {
+    setSelectedSurahState(surah);
+    localStorage.setItem("selectedSurah", JSON.stringify(surah));
+  };
+  
 
   const [darkMode, setDarkMode] = useState(() => {
     try {
@@ -31,7 +37,16 @@ export const QuranProvider = ({ children }) => {
     }
   });
 
-  const [currentPage, setCurrentPage] = useState(1); // يتم تصفيره عند تغيير السورة
+  const [playlist, setPlaylist] = useState(() => {
+    try {
+      const saved = localStorage.getItem('playlist');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [bookmarks, setBookmarks] = useState(() => {
     try {
@@ -57,6 +72,7 @@ export const QuranProvider = ({ children }) => {
   const [debouncedFontSize] = useDebounce(fontSize, 1000);
   const [debouncedBookmarks] = useDebounce(bookmarks, 1000);
   const [debouncedReadingProgress] = useDebounce(readingProgress, 1000);
+  const [debouncedPlaylist] = useDebounce(playlist, 1000);
 
   const addBookmark = useCallback((bookmark) => {
     setBookmarks(prev => [...prev, bookmark]);
@@ -65,10 +81,19 @@ export const QuranProvider = ({ children }) => {
   const removeBookmark = useCallback((id) => {
     const isConfirmed = confirm('Are you sure you want to remove this bookmark?');
     if (!isConfirmed) return;
-
     setBookmarks(prev => prev.filter(b => b.id !== id));
-}, []);
+  }, []);
 
+  const addToPlaylist = useCallback((surah) => {
+    setPlaylist(prev => {
+      if (prev.find(s => s.number === surah.number)) return prev;
+      return [...prev, surah];
+    });
+  }, []);
+
+  const removeFromPlaylist = useCallback((surahNumber) => {
+    setPlaylist(prev => prev.filter(s => s.number !== surahNumber));
+  }, []);
 
   const updateReadingProgress = useCallback((page) => {
     setReadingProgress(prev => ({
@@ -80,7 +105,7 @@ export const QuranProvider = ({ children }) => {
 
   useEffect(() => {
     if (selectedSurah) {
-      setCurrentPage(1); // تصفير الصفحة عند تغيير السورة
+      setCurrentPage(1);
     }
   }, [selectedSurah]);
 
@@ -105,6 +130,10 @@ export const QuranProvider = ({ children }) => {
     localStorage.setItem('readingProgress', JSON.stringify(debouncedReadingProgress));
   }, [debouncedReadingProgress]);
 
+  useEffect(() => {
+    localStorage.setItem('playlist', JSON.stringify(debouncedPlaylist));
+  }, [debouncedPlaylist]);
+
   return (
     <QuranContext.Provider
       value={{
@@ -122,7 +151,10 @@ export const QuranProvider = ({ children }) => {
         readingProgress,
         updateReadingProgress,
         showBookmarks,
-        setShowBookmarks
+        setShowBookmarks,
+        playlist,
+        addToPlaylist,
+        removeFromPlaylist
       }}
     >
       {children}

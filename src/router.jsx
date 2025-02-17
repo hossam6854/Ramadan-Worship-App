@@ -1,17 +1,20 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Quran from "./pages/Quran";
-import Worship from "./pages/WorshipPlan";
+import React, { lazy, Suspense } from "react";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
+
+const Home = lazy(() => import("./pages/Home"));
+const Quran = lazy(() => import("./pages/Quran"));
+const Worship = lazy(() => import("./pages/WorshipPlan"));
 
 const AppRouter = () => {
   return (
     <Router>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/quran" element={<Quran />} />
-        <Route path="/worship" element={<Worship />} />
-      </Routes>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/quran" element={<Quran />} />
+          <Route path="/worship" element={<Worship />} />
+        </Routes>
+      </Suspense>
     </Router>
   );
 };

@@ -49,15 +49,12 @@ const CountdownTimer = () => {
   return (
     <div >
       <div >
-        {/* العنوان الرئيسي */}
-        <h1 className="text-4xl font-bold text-purple-800 mb-6">
-          🕌 العدّاد التنازلي لرمضان
-        </h1>
+        
 
         {/* التاريخ */}
         <div className="mb-8">
-          <p className="text-xl font-semibold text-gray-700 mb-2">
-            📅 التاريخ اليوم:
+          <p className="text-xl font-semibold text-gray-700 mb-2 text-right">
+            📅 التاريخ اليوم
           </p>
           <div className="bg-purple-100 p-4 rounded-lg">
             <p className="text-lg font-medium text-purple-800">{currentDate}</p>
@@ -66,14 +63,14 @@ const CountdownTimer = () => {
 
         {/* العدّاد التنازلي */}
         <div className="bg-gradient-to-r from-purple-500 to-blue-500 p-6 rounded-2xl shadow-lg">
-          <h2 className="text-2xl font-semibold text-white mb-4">
-            ⏳ الوقت المتبقي لرمضان:
+          <h2 className="text-2xl font-semibold text-white mb-4 text-right">
+            ⏳ الوقت المتبقي لرمضان
           </h2>
-          <p className="text-4xl font-bold text-white">{timeLeft}</p>
+          <p className="text-4xl font-bold text-white text-right">{timeLeft}</p>
         </div>
 
         {/* تذييل الصفحة */}
-        <div className="mt-8 text-gray-600">
+        <div className="mt-8 text-gray-600 text-right">
           <p>كل لحظة تقربنا من رمضان هي فرصة للتجديد الروحي.</p>
         </div>
       </div>

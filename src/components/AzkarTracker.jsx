@@ -103,73 +103,73 @@ const AzkarTracker = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-4xl">
-      <div className="flex flex-wrap gap-4 mb-6">
+    <div className="container mx-auto p-4 max-w-4xl" dir="rtl">
+      <div className="flex flex-wrap gap-4 mb-6 justify-start">
         {Object.entries(azkarCategories).map(([key, { icon, title }]) => (
           <button
             key={key}
             onClick={() => setActiveCategory(key)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg cursor-pointer transition-all ${
+            className={`flex flex-row-reverse items-center gap-2 px-6 py-3 rounded-xl cursor-pointer transition-all duration-300 ${
               activeCategory === key
-                ? "bg-green-500 text-white shadow-lg scale-105"
-                : "bg-white text-gray-700 shadow hover:shadow-md"
+                ? "bg-gradient-to-r from-green-500 to-green-600 text-white shadow-lg transform scale-105"
+                : "bg-white text-gray-700 shadow hover:shadow-md hover:bg-gray-50"
             }`}
           >
             {icon}
-            <span>{title}</span>
+            <span className="text-lg font-semibold">{title}</span>
           </button>
         ))}
       </div>
-
-      <div className="bg-white rounded-xl shadow-lg p-6">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-800">
+  
+      <div className="bg-white rounded-xl shadow-lg p-8">
+        <div className="flex flex-row-reverse justify-between items-center mb-8">
+          <div className="text-right">
+            <h2 className="text-3xl font-bold text-gray-800">
               {azkarCategories[activeCategory].title}
             </h2>
-            <p className="text-gray-600 mt-1">
+            <p className="text-gray-600 mt-2 text-lg">
               {azkarCategories[activeCategory].time}
             </p>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Award className="w-5 h-5 text-yellow-500" />
-              <span className="font-semibold">
+          <div className="flex flex-row-reverse items-center gap-6">
+            <div className="flex flex-row-reverse items-center gap-3">
+              <Award className="w-6 h-6 text-yellow-500" />
+              <span className="font-semibold text-lg">
                 سلسلة: {streaks[activeCategory] || 0} يوم
               </span>
             </div>
             <button
               onClick={() => resetCategory(activeCategory)}
-              className="p-2 rounded-full hover:bg-gray-100"
+              className="p-3 rounded-full hover:bg-gray-100 transition-colors duration-300"
               title="إعادة تعيين"
             >
-              <RefreshCw className="w-5 h-5 text-gray-600" />
+              <RefreshCw className="w-6 h-6 text-gray-600" />
             </button>
           </div>
         </div>
-
-        <div className="mb-4 bg-gray-200 rounded-full h-2">
+  
+        <div className="mb-6 bg-gray-200 rounded-full h-3">
           <div
-            className="bg-green-500 h-2 rounded-full transition-all duration-500"
+            className="bg-gradient-to-r from-green-500 to-green-600 h-3 rounded-full transition-all duration-500"
             style={{ width: `${progress[activeCategory] || 0}%` }}
           ></div>
         </div>
-
-        <div className="space-y-4">
+  
+        <div className="space-y-6 ">
           {azkarCategories[activeCategory].items.map((item, index) => (
             <div
               key={index}
-              className="flex justify-between items-center p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+              className="flex flex-row-reverse justify-between items-center p-6 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors duration-300"
             >
-              <div className="flex-1">
-                <p className="text-lg font-medium text-gray-800">{item.text}</p>
-                <p className="text-sm text-gray-600">التكرار: {item.count} مرة</p>
+              <div className="flex-1 text-right p-6">
+                <p className="text-xl font-medium text-gray-800">{item.text}</p>
+                <p className="text-sm text-gray-600 mt-2">التكرار: {item.count} مرة</p>
               </div>
               <button
                 onClick={() => markZekr(activeCategory, index)}
-                className={`px-4 py-2 rounded-lg transition-all ${
+                className={`px-6 py-3 rounded-xl transition-all duration-300 ${
                   azkar[activeCategory]?.[index]
-                    ? "bg-green-500 text-white"
+                    ? "bg-gradient-to-r from-green-500 to-green-600 text-white"
                     : "bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 cursor-pointer"
                 }`}
               >
@@ -181,6 +181,5 @@ const AzkarTracker = () => {
       </div>
     </div>
   );
-};
-
+};  
 export default AzkarTracker;

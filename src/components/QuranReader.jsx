@@ -1,7 +1,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useQuran } from "../context/QuranContext";
-import { Moon, Sun, BookmarkPlus, Type, ArrowLeft, ArrowRight } from "lucide-react"; // تمت إضافة ArrowLeft
+import {
+  Moon,
+  Sun,
+  BookmarkPlus,
+  Type,
+  ArrowLeft,
+  ArrowRight,
+} from "lucide-react"; // تمت إضافة ArrowLeft
 import React from "react";
 import ToastMessage from "./ToastMessage";
 import QuranTafsir from "./QuranTafsir";
@@ -107,36 +114,6 @@ const QuranReader = () => {
       }`}
     >
       <div className="flex justify-between items-center mb-4">
-        <div className="flex gap-2">
-          <button
-            onClick={() => setDarkMode(!darkMode)}
-            className={`p-2 rounded-lg cursor-pointer transition-colors ${
-              darkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-800"
-            }`}
-          >
-            {darkMode ? (
-              <Sun className="w-5 h-5" />
-            ) : (
-              <Moon className="w-5 h-5" />
-            )}
-          </button>
-          <button
-            onClick={() => setFontSize((prev) => prev + 2)}
-            className={`p-2 rounded-lg cursor-pointer transition-colors ${
-              darkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-800"
-            }`}
-          >
-            <Type className="w-5 h-5" />+
-          </button>
-          <button
-            onClick={() => setFontSize((prev) => Math.max(prev - 2, 12))}
-            className={`p-2 rounded-lg cursor-pointer transition-colors ${
-              darkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-800"
-            }`}
-          >
-            <Type className="w-5 h-5" />-
-          </button>
-        </div>
         <button
           onClick={handleAddBookmark}
           className="p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors cursor-pointer"
@@ -150,6 +127,39 @@ const QuranReader = () => {
             onClose={() => setShowToast(false)}
           />
         )}
+
+        <div className="flex gap-2">
+        <button
+            onClick={() => setFontSize((prev) => Math.max(prev - 2, 12))}
+            className={`p-2 rounded-lg cursor-pointer transition-colors ${
+              darkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-800"
+            }`}
+          >
+          
+            <Type className="w-5 h-5" />-
+          </button>
+          
+          <button
+            onClick={() => setFontSize((prev) => prev + 2)}
+            className={`p-2 rounded-lg cursor-pointer transition-colors ${
+              darkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-800"
+            }`}
+          >
+            <Type className="w-5 h-5" />+
+          </button>
+          <button
+            onClick={() => setDarkMode(!darkMode)}
+            className={`p-2 rounded-lg cursor-pointer transition-colors ${
+              darkMode ? "bg-gray-800 text-white" : "bg-gray-100 text-gray-800"
+            }`}
+          >
+            {darkMode ? (
+              <Sun className="w-5 h-5" />
+            ) : (
+              <Moon className="w-5 h-5" />
+            )}
+          </button>
+        </div>
       </div>
 
       {/* عرض الآيات بجوار بعضها */}
@@ -174,7 +184,8 @@ const QuranReader = () => {
               }
               className="px-1 py-2 font-semibold cursor-pointer hover:text-blue-500 transition-colors active:text-blue-500"
             >
-              {ayah.text} <span className="text-gray-500">({ayah.numberInSurah})</span>
+              {ayah.text}{" "}
+              <span className="text-gray-500">( {ayah.numberInSurah} )</span>
             </span>
             {selectedAyah === ayah.numberInSurah && (
               <QuranTafsir
@@ -222,8 +233,8 @@ const QuranReader = () => {
             onClick={handleGoToFirstPage}
             className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors"
           >
-            العودة إلى الصفحة الأولى
             <ArrowRight className="inline-block mr-2" />
+            العودة إلى الصفحة الأولى
           </button>
         </div>
       )}

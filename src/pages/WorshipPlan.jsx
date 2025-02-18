@@ -12,9 +12,7 @@ function Worship() {
     <WorshipProvider>
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-10 px-6">
         <header className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-800">
-            🕌 العبادات اليومية
-          </h1>
+          
 
           <div className="flex space-x-4">
             <Link
@@ -31,6 +29,9 @@ function Worship() {
               الرئيسية
             </Link>
           </div>
+          <h1 className="text-3xl font-bold text-gray-800">
+            🕌 العبادات اليومية
+          </h1>
         </header>
         <PrayerTracker />
         <ProgressBar />

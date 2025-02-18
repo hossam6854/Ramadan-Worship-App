@@ -15,8 +15,7 @@ function QuranApp() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-2 px-2">
       <div className="container mx-auto px-4 py-8">
         <header className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold ">📖 القرآن الكريم</h1>
-          <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4">
             <Link
               to="/worship"
               className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
@@ -32,6 +31,8 @@ function QuranApp() {
               الرئيسية
             </Link>
           </div>
+          <h1 className="text-3xl font-bold ">📖 القرآن الكريم</h1>
+          
         </header>
 
         <div className="text-center mb-6">

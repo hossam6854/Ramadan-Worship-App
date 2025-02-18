@@ -33,7 +33,6 @@ const PrayerTracker = () => {
       const now = new Date();
       const [hours, minutes] = prayerTimes[nextPrayer].split(':');
       
-      // Create prayer time for today
       const nextTime = set(now, {
         hours: parseInt(hours),
         minutes: parseInt(minutes),
@@ -41,7 +40,6 @@ const PrayerTracker = () => {
         milliseconds: 0
       });
 
-      // If prayer time has passed for today, add one day
       if (nextTime < now) {
         nextTime.setDate(nextTime.getDate() + 1);
       }
@@ -112,22 +110,22 @@ const PrayerTracker = () => {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6">متابعة الصلاة</h1>
+    <div className="container mx-auto p-4" dir="rtl">
+      <h1 className="text-3xl font-bold text-gray-800 mb-6 text-right">متابعة الصلاة</h1>
       
       {message.text && (
-        <div className={`p-4 rounded-lg mb-6 ${
+        <div className={`p-4 rounded-lg mb-6 text-right ${
           message.type === "success" ? "bg-green-50 text-green-700" : "bg-red-50 text-red-700"
         }`}>
           {message.text}
         </div>
       )}
-
+  
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {Object.entries(prayerTimes).map(([prayer, time]) => (
           <div
             key={prayer}
-            className={`p-6 rounded-xl shadow-lg transition-all ${
+            className={`p-6 rounded-xl shadow-lg transition-all text-right ${
               prayers[prayer]?.completed
                 ? "bg-green-50 border border-green-200"
                 : missedPrayers.includes(prayer)
@@ -151,7 +149,7 @@ const PrayerTracker = () => {
               <button
                 onClick={() => markPrayer(prayer)}
                 disabled={!isPrayerTimePassed(prayer)}
-                className={`px-4 py-2 rounded-lg transition-all ${
+                className={`px-4 py-2 rounded-lg transition-all flex items-center gap-2 ${
                   prayers[prayer]?.completed
                     ? "bg-green-500 text-white"
                     : isPrayerTimePassed(prayer)
@@ -160,10 +158,10 @@ const PrayerTracker = () => {
                 }`}
               >
                 {prayers[prayer]?.completed ? (
-                  <span className="flex items-center gap-2 ">
+                  <>
                     <CheckCircle2 className="w-4 h-4" />
                     تم
-                  </span>
+                  </>
                 ) : (
                   "إتمام"
                 )}
@@ -172,9 +170,9 @@ const PrayerTracker = () => {
           </div>
         ))}
       </div>
-
+  
       {nextPrayer && (
-        <div className="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-200">
+        <div className="mt-8 p-6 bg-blue-50 rounded-xl border border-blue-200 text-right">
           <div className="flex items-center gap-3">
             <Clock className="w-6 h-6 text-blue-500" />
             <div>
@@ -190,6 +188,6 @@ const PrayerTracker = () => {
       )}
     </div>
   );
-};
+};  
 
 export default PrayerTracker;

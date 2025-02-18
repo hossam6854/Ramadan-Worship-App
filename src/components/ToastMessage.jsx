@@ -5,7 +5,7 @@ const ToastMessage = ({ message, onClose }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       onClose();
-    }, 3000); // الرسالة تختفي بعد 3 ثوانٍ
+    }, 3000); 
 
     return () => clearTimeout(timer);
   }, [onClose]);

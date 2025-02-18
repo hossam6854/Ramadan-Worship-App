@@ -5,11 +5,11 @@ import { ChevronDown, ChevronUp, Play, Pause, X } from "lucide-react";
 import { motion } from "framer-motion";
 
 const scholars = [
-  { id: "1", name: "تفسير الميسر" },
-  { id: "2", name: "تفسير الجلالين" },
-  { id: "8", name: "تفسير الطبري" },
-  { id: "7", name: "تفسير القرطبي" },
-  { id: "4", name: "تفسير ابن كثير" },
+  { id: "ar-tafsir-muyassar", name: "تفسير الميسر" },
+  { id: "ar-tafsir-al-wasit", name: "تفسير طنطاوي" },
+  { id: "ar-tafsir-al-tabari", name: "تفسير الطبري" },
+  { id: "ar-tafseer-al-qurtubi", name: "تفسير القرطبي" },
+  { id: "ar-tafsir-ibn-kathir", name: "تفسير ابن كثير" },
 ];
 
 const QuranTafsir = ({ ayahNumberInSurah, ayahNumber, onClose }) => {
@@ -33,7 +33,7 @@ const QuranTafsir = ({ ayahNumberInSurah, ayahNumber, onClose }) => {
 
       try {
         const res = await axios.get(
-          `http://api.quran-tafseer.com/tafseer/${selectedScholar.id}/${selectedSurah.number}/${ayahNumberInSurah}`,
+          `https://cdn.jsdelivr.net/gh/spa5k/tafsir_api@main/tafsir/${selectedScholar.id}/${selectedSurah.number}/${ayahNumberInSurah}.json`,
           { cancelToken: source.token }
         );
         setTafsir(res.data);
@@ -88,23 +88,23 @@ const QuranTafsir = ({ ayahNumberInSurah, ayahNumber, onClose }) => {
       }`}
     >
       <div className="flex items-center justify-between">
+        {/* زر الإغلاق */}
+        <button
+          onClick={onClose} // استدعاء دالة الإغلاق
+          className="p-2 mr-2 rounded-full hover:bg-gray-200 transition-colors cursor-pointer"
+        >
+          <X className="w-5 h-5" />
+        </button>
         <button
           onClick={() => setIsExpanded(!isExpanded)}
-          className="w-full flex items-center justify-between py-2 text-lg font-semibold border-b border-gray-300 hover:text-blue-500 transition-all"
+          className="w-full flex items-center justify-between py-2 text-lg font-semibold border-b border-gray-300 hover:text-blue-500 transition-all cursor-pointer"
         >
-          التفسير
           {isExpanded ? (
             <ChevronUp className="w-5 h-5" />
           ) : (
             <ChevronDown className="w-5 h-5" />
           )}
-        </button>
-        {/* زر الإغلاق */}
-        <button
-          onClick={onClose} // استدعاء دالة الإغلاق
-          className="p-2 ml-2 rounded-full hover:bg-gray-200 transition-colors"
-        >
-          <X className="w-5 h-5" />
+          التفسير
         </button>
       </div>
 
@@ -123,10 +123,10 @@ const QuranTafsir = ({ ayahNumberInSurah, ayahNumber, onClose }) => {
                   onClick={() => setSelectedScholar(scholar)}
                   className={`px-4 py-1 rounded-full text-sm font-medium transition-all shadow-md ${
                     selectedScholar.id === scholar.id
-                      ? "bg-blue-600 text-white shadow-lg"
+                      ? "bg-blue-600 text-white cursor-pointer shadow-lg"
                       : darkMode
-                      ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
-                      : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                      ? "bg-gray-700 text-gray-300 hover:bg-gray-600 cursor-pointer"
+                      : "bg-gray-200 text-gray-700 hover:bg-gray-300 cursor-pointer"
                   }`}
                 >
                   {scholar.name}
@@ -154,11 +154,15 @@ const QuranTafsir = ({ ayahNumberInSurah, ayahNumber, onClose }) => {
                 onClick={toggleAudio}
                 className={`px-5 py-2 rounded-full flex items-center gap-2 text-lg font-medium transition-all shadow-md ${
                   isPlaying
-                    ? "bg-red-500 hover:bg-red-600 text-white shadow-lg"
-                    : "bg-green-500 hover:bg-green-600 text-white shadow-lg"
+                    ? "bg-red-500 hover:bg-red-600 text-white cursor-pointer shadow-lg"
+                    : "bg-green-500 hover:bg-green-600 text-white cursor-pointer shadow-lg"
                 }`}
               >
-                {isPlaying ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
+                {isPlaying ? (
+                  <Pause className="w-6 h-6" />
+                ) : (
+                  <Play className="w-6 h-6" />
+                )}
                 {isPlaying ? "إيقاف" : "تشغيل"}
               </button>
             </div>

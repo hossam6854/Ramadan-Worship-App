@@ -8,7 +8,9 @@ import {
   Volume2,
   ListMusic,
   Plus,
+  VolumeX,
 } from "lucide-react";
+
 import React from "react";
 
 const RECITERS = [
@@ -23,19 +25,31 @@ const RECITERS = [
 ];
 
 const QuranAudio = () => {
-  const { selectedSurah, playlist, addToPlaylist, removeFromPlaylist } =
-    useQuran();
+  const {
+    selectedSurah,
+    playlist,
+    addToPlaylist,
+    removeFromPlaylist,
+    setSelectedSurah,
+  } = useQuran();
   const [loading, setLoading] = useState(true);
   const [audioUrl, setAudioUrl] = useState("");
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
-  const [volume, setVolume] = useState(1);
+  const audioRef = useRef(null);
+
+  const savedMuted = localStorage.getItem("muted") === "true";
+  const savedVolume = parseFloat(localStorage.getItem("volume")) || 1;
+  const savedPreviousVolume = parseFloat(localStorage.getItem("previousVolume")) || savedVolume;
+
+  const [muted, setMuted] = useState(savedMuted);
+  const [volume, setVolume] = useState(savedMuted ? 0 : savedVolume);
+  const [previousVolume, setPreviousVolume] = useState(savedPreviousVolume);
   const [selectedReciter, setSelectedReciter] = useState(() => {
     return localStorage.getItem("selectedReciter") || "ar.alafasy";
   });
   const [showPlaylist, setShowPlaylist] = useState(false);
-  const audioRef = useRef(null);
 
   useEffect(() => {
     if (selectedSurah) {
@@ -131,13 +145,51 @@ const QuranAudio = () => {
     }
   };
 
-  const handleVolumeChange = (e) => {
-    const newVolume = parseFloat(e.target.value);
-    setVolume(newVolume);
+
+
+useEffect(() => {
+  localStorage.setItem("volume", volume);
+  localStorage.setItem("muted", muted);
+  localStorage.setItem("previousVolume", previousVolume);
+}, [volume, muted, previousVolume]);
+
+const handleVolumeToggle = () => {
+  setMuted((prevMuted) => {
+    const newMuted = !prevMuted;
+
     if (audioRef.current) {
-      audioRef.current.volume = newVolume;
+      if (newMuted) {
+        setPreviousVolume(volume); 
+        setVolume(0);
+        audioRef.current.volume = 0;
+      } else {
+        setVolume(previousVolume); 
+        audioRef.current.volume = previousVolume;
+      }
+      audioRef.current.muted = newMuted;
     }
-  };
+
+    return newMuted;
+  });
+};
+
+const handleVolumeChange = (e) => {
+  const newVolume = parseFloat(e.target.value);
+  setVolume(newVolume);
+
+  if (audioRef.current) {
+    audioRef.current.volume = newVolume;
+    if (newVolume === 0) {
+      setMuted(true);
+      audioRef.current.muted = true;
+    } else {
+      setMuted(false);
+      audioRef.current.muted = false;
+      setPreviousVolume(newVolume); 
+    }
+  }
+};
+
 
   const formatTime = (time) => {
     if (isNaN(time) || time < 0) return "00:00";
@@ -151,23 +203,23 @@ const QuranAudio = () => {
   return (
     <div className="bg-gray-900 text-white p-6 rounded-lg shadow-md mt-4">
       <div className="flex justify-between items-center mb-4">
-        <h2 className="text-xl font-semibold text-center">
-          🎧 استمع إلى {selectedSurah?.name}
-        </h2>
         <button
           onClick={() => setShowPlaylist(!showPlaylist)}
           className="p-2 rounded-full hover:bg-gray-700 transition-colors"
           title="قائمة التشغيل"
         >
-          <ListMusic className="w-5 h-5" />
+          <ListMusic className="w-5 h-5 cursor-pointer" />
         </button>
+        <h2 className="text-xl font-semibold text-center">
+          🎧 استمع إلى {selectedSurah?.name}
+        </h2>
       </div>
 
-      <div className="mb-4">
+      <div className="relative mb-4 ">
         <select
           value={selectedReciter}
           onChange={(e) => setSelectedReciter(e.target.value)}
-          className="w-full p-2 rounded bg-gray-800 text-white border border-gray-700"
+          className="w-full p-2 rounded bg-gray-800 text-white border border-gray-700 text-right appearance-none pr-5 cursor-pointer"
         >
           {RECITERS.map((reciter) => (
             <option key={reciter.id} value={reciter.id}>
@@ -175,6 +227,10 @@ const QuranAudio = () => {
             </option>
           ))}
         </select>
+
+        <div className="absolute left-2 top-1/2 transform -translate-y-1/2 pointer-events-none">
+          🔽
+        </div>
       </div>
 
       {loading ? (
@@ -234,32 +290,40 @@ const QuranAudio = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <Volume2 className="w-5 h-5" />
-            <input
-              type="range"
-              min="0"
-              max="1"
-              step="0.1"
-              value={volume}
-              onChange={handleVolumeChange}
-              className="w-24 h-2 rounded-lg appearance-none bg-gray-700 accent-blue-500 cursor-pointer"
-            />
-          </div>
+      <button onClick={handleVolumeToggle}>
+        {muted ? <VolumeX className="w-5 h-5 cursor-pointer" /> : <Volume2 className="w-5 h-5 cursor-pointer" />}
+      </button>
+
+      <input
+        type="range"
+        min="0"
+        max="1"
+        step="0.1"
+        value={volume}
+        onChange={handleVolumeChange}
+        className="w-24 h-2 rounded-lg appearance-none bg-gray-700 accent-blue-500 cursor-pointer"
+      />
+    </div>
 
           {showPlaylist && (
             <div className="mt-4 p-4 bg-gray-800 rounded-lg">
-              <h3 className="text-lg font-semibold mb-2">قائمة التشغيل</h3>
+              <h3 className="text-lg font-semibold mb-2 text-right">
+                قائمة التشغيل
+              </h3>
               {playlist?.length > 0 ? (
-                <ul className="space-y-2">
+                <ul className="space-y-2  ">
                   {playlist.map((surah) => (
                     <li
+                      onClick={() => {
+                        setSelectedSurah(surah);
+                      }}
                       key={surah.number}
-                      className="flex justify-between items-center"
+                      className="flex flex-row-reverse justify-between items-center bg-gray-600 rounded-lg p-2  gap-2 cursor-pointer"
                     >
                       <span>{surah.name}</span>
                       <button
                         onClick={() => removeFromPlaylist(surah.number)}
-                        className="text-red-500 hover:text-red-400"
+                        className="text-red-500 hover:text-red-400 cursor-pointer"
                       >
                         حذف
                       </button>
@@ -267,7 +331,9 @@ const QuranAudio = () => {
                   ))}
                 </ul>
               ) : (
-                <p className="text-gray-400">لا توجد سور في قائمة التشغيل</p>
+                <p className="text-gray-400 text-right">
+                  لا توجد سور في قائمة التشغيل
+                </p>
               )}
             </div>
           )}

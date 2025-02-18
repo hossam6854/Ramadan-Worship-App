@@ -155,48 +155,43 @@ const PrayerTimes = () => {
   return (
     <div >
       <div >
-        {/* العنوان الرئيسي */}
-        <h1 className="text-3xl font-bold text-indigo-700 mb-4">🕌 أوقات الصلاة</h1>
+        <h1 className="text-3xl font-bold text-indigo-700 mb-4 text-center">🕌 أوقات الصلاة</h1>
 
-        {/* حالة التحميل */}
         {loading ? (
-          <p className="text-lg font-semibold text-gray-700">⏳ جاري تحميل أوقات الصلاة...</p>
+          <p className="text-lg font-semibold text-gray-700 text-center">⏳ ...جاري تحميل أوقات الصلاة</p>
         ) : (
           <>
-            {/* الوقت الحالي */}
-            <div className="bg-gray-200 p-3 rounded-xl mb-4">
-              <p className="text-xl font-semibold text-gray-800">
+            <div className="bg-gray-200 p-3 rounded-xl mb-4 ">
+              <p className="text-xl font-semibold text-gray-800 text-center">
                 ⏰ الوقت الآن: {currentTime.toLocaleTimeString("ar-EG", { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
               </p>
             </div>
 
-            {/* الصلاة القادمة */}
             {nextPrayer && (
               <div className="bg-green-200 p-4 rounded-xl shadow-md mb-4">
-                <p className="text-lg font-bold text-green-800">🕰️ الصلاة القادمة: {nextPrayer.name} بعد {remainingTime}</p>
+                <p className="text-lg font-bold text-green-800 text-center">🕰️ الصلاة القادمة: {nextPrayer.name} بعد {remainingTime}</p>
               </div>
             )}
 
-            {/* قائمة أوقات الصلاة */}
-            <ul className="space-y-4">
+            <ul className="space-y-4 ">
               {Object.entries(prayers)
                 .filter(([key]) => prayerNames[key])
                 .map(([key, value]) => (
                   <li
                     key={key}
-                    className="flex items-center justify-between bg-indigo-100 p-3 rounded-xl shadow-sm"
+                    className="flex items-center justify-between bg-indigo-100 p-3 rounded-xl shadow-sm "
                   >
                     <span className="text-lg font-semibold text-indigo-800 flex items-center gap-2">
                       {getPrayerIcon(key)}
                       {prayerNames[key]}
                     </span>
-                    <span className="text-lg font-bold text-gray-900">{value}</span>
+                    <span className="text-lg font-bold text-gray-900 ">{value}</span>
                   </li>
                 ))}
             </ul>
 
             {/* ملاحظة */}
-            <div className="mt-6 text-gray-600">
+            <div className="mt-6 text-gray-600 text-right">
               <p>✨ اللهم اجعلنا من المحافظين على الصلاة 🙏</p>
             </div>
           </>

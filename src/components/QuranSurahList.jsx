@@ -15,6 +15,7 @@ const SurahList = () => {
   const [isListVisible, setIsListVisible] = useState(false);
   const { setSelectedSurah, darkMode, selectedSurah } = useQuran();
 
+
   useEffect(() => {
     setLoading(true);
     axios
@@ -57,11 +58,10 @@ const SurahList = () => {
       }`}
     >
       <div className="relative mb-4">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
         <input
           type="text"
-          placeholder="ابحث عن سورة..."
-          className={`w-full pl-10 pr-4 py-2 rounded-lg outline-none transition-colors ${
+          placeholder="... ابحث عن سورة"
+          className={`w-full pr-10 pl-4 py-2 rounded-lg outline-none transition-colors text-right ${
             darkMode
               ? "bg-gray-800 text-white placeholder-gray-500 border-gray-700"
               : "bg-gray-100 text-gray-900 placeholder-gray-500 border-gray-200"
@@ -70,6 +70,7 @@ const SurahList = () => {
             setSearch(removeDiacritics(e.target.value.toLowerCase()))
           }
         />
+        <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
       </div>
 
       <button

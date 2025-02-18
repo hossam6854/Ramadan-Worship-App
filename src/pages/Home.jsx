@@ -44,13 +44,13 @@ const Home = () => {
 
          {/* زر النزول إلى أوقات الصلاة */}
          <div className="text-center mt-6">
-            <a
+            <button
               onClick={handleScroll}
               className="inline-flex items-center px-4 py-2 mb-4 text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors cursor-pointer"
               >
               <ArrowDown className="h-6 w-6" />
               الذهاب إلى أوقات الصلاة
-            </a>
+            </button>
           </div>
 
         {/* المحتوى الرئيسي */}

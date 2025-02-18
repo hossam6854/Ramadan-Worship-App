@@ -12,11 +12,34 @@ export const QuranProvider = ({ children }) => {
       return null;
     }
   });
+
   
+  const [surahProgress, setSurahProgress] = useState(() => {
+    try {
+      const saved = localStorage.getItem("surahProgress");
+      return saved ? JSON.parse(saved) : {};
+    } catch {
+      return {};
+    }
+  });
+
   const setSelectedSurah = (surah) => {
     setSelectedSurahState(surah);
     localStorage.setItem("selectedSurah", JSON.stringify(surah));
   };
+
+  const updateSurahProgress = (surahNumber, page) => {
+    setSurahProgress((prev) => ({
+      ...prev,
+      [surahNumber]: page,
+    }));
+  };
+
+  const getSurahProgress = (surahNumber) => {
+    return surahProgress[surahNumber] || 1;
+  };
+  
+ 
   
 
   const [darkMode, setDarkMode] = useState(() => {
@@ -154,7 +177,10 @@ export const QuranProvider = ({ children }) => {
         setShowBookmarks,
         playlist,
         addToPlaylist,
-        removeFromPlaylist
+        removeFromPlaylist,
+        surahProgress,
+        getSurahProgress,
+        updateSurahProgress
       }}
     >
       {children}

@@ -66,23 +66,25 @@ const PrayerTracker = () => {
       });
       return;
     }
-
+  
     const now = new Date();
+    const today = format(now, "yyyy-MM-dd");
+  
     setPrayers((prev) => ({
       ...prev,
       [prayer]: {
         completed: true,
         time: format(now, "HH:mm"),
-        date: format(now, "yyyy-MM-dd")
+        date: today 
       }
     }));
-
+  
     setMessage({
       text: "تقبل الله! أتممت الصلاة بنجاح 🌟",
       type: "success"
     });
   };
-
+  
   useEffect(() => {
     if (message.text) {
       const timer = setTimeout(() => setMessage({ text: "", type: "" }), 3000);

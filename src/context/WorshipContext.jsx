@@ -7,11 +7,21 @@ import React from "react";
 export const WorshipContext = createContext(null);
 
 export const WorshipProvider = ({ children }) => {
-  // Current prayers state
   const [prayers, setPrayers] = useState(() => {
     const stored = localStorage.getItem("currentPrayers");
-    return stored ? JSON.parse(stored) : {};
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      const today = format(new Date(), "yyyy-MM-dd");
+      
+      const filteredPrayers = Object.fromEntries(
+        Object.entries(parsed).filter(([_, prayer]) => prayer.date === today)
+      );
+  
+      return filteredPrayers;
+    }
+    return {};
   });
+  
 
   // Prayer history state
   const [prayerHistory, setPrayerHistory] = useState(() => {

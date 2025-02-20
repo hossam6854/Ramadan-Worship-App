@@ -1,13 +1,12 @@
 import { useState, useEffect } from "react";
 import moment from "moment";
-import "moment/locale/ar"; // استيراد اللغة العربية لـ moment
+import "moment/locale/ar";
 import React from "react";
 
 const CountdownTimer = () => {
   const [timeLeft, setTimeLeft] = useState("");
   const [currentDate, setCurrentDate] = useState("");
 
-  // دالة لتحديد الصيغة الصحيحة لكلمة "ساعة"
   const getHourLabel = (hours) => {
     if (hours > 10) return "ساعة";
     if (hours >= 3) return "ساعات";
@@ -16,47 +15,58 @@ const CountdownTimer = () => {
 
   useEffect(() => {
     const ramadanStart = moment("2025-03-01", "YYYY-MM-DD");
-  
+
     const updateTime = () => {
       const now = moment();
       const diff = ramadanStart.diff(now);
       const duration = moment.duration(diff);
-  
+
       const totalHours = Math.floor(duration.asHours());
       const days = Math.floor(totalHours / 24);
       const hours = totalHours % 24;
       const minutes = duration.minutes();
       const seconds = duration.seconds();
-  
-      const hourLabel = getHourLabel(hours);
-  
-      // استخدام `\u202B` لضبط اتجاه النص عند عرض الأرقام
-      const newTimeLeft = `\u202B${days} يوم ${hours} ${hourLabel} ${minutes} دقيقة ${seconds} ثانية`;
-      
-      if (newTimeLeft !== timeLeft) setTimeLeft(newTimeLeft);
-  
-      const newDate = now.locale("ar").format("dddd، D MMMM YYYY");
-      if (newDate !== currentDate) setCurrentDate(newDate);
-    };
-  
-    updateTime();
-  
-    const timerInterval = setInterval(updateTime, 1000);
-  
-    return () => clearInterval(timerInterval);
-  }, [timeLeft, currentDate]);
-  
-  return (
-    <div >
-      <div >
-        
 
-        {/* التاريخ */}
+      const hourLabel = getHourLabel(hours);
+
+      const newTimeLeft = `\u202B${days} يوم ${hours} ${hourLabel} ${minutes} دقيقة ${seconds} ثانية`;
+
+      if (newTimeLeft !== timeLeft) setTimeLeft(newTimeLeft);
+    };
+
+    updateTime();
+
+    const timerInterval = setInterval(updateTime, 1000);
+
+    return () => clearInterval(timerInterval);
+  }, [timeLeft]);
+
+  useEffect(() => {
+    const updateDate = () => {
+      const options = {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric",
+      };
+      const newDate = new Date().toLocaleDateString("ar-EG", options);
+      setCurrentDate(newDate);
+    };
+
+    updateDate(); // تحديث التاريخ عند التحميل
+    const interval = setInterval(updateDate, 60 * 60 * 1000); // تحديث كل ساعة
+
+    return () => clearInterval(interval); // تنظيف التحديث عند إزالة المكون
+  }, []);
+
+  return (
+    <div>
+      <div>
         <div className="mb-8">
           <p className="text-xl font-semibold text-gray-700 mb-2 text-right">
             📅 التاريخ اليوم
           </p>
-          <div className="bg-purple-100 p-4 rounded-lg">
+          <div className="bg-purple-100 p-4 rounded-lg text-right">
             <p className="text-lg font-medium text-purple-800">{currentDate}</p>
           </div>
         </div>

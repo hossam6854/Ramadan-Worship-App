@@ -2,14 +2,28 @@ import { useEffect, useState, useMemo, useCallback } from "react";
 import { motion } from "framer-motion";
 import React from "react";
 
-
 // قائمة التحديات اليومية
 const dailyChallenges = [
-  { challenge: "ابتسم لشخص غريب اليوم 😊", motivation: "الابتسامة معدية وتزيد الإيجابية" },
-  { challenge: "اقرأ صفحة واحدة من كتاب 📖", motivation: "المعرفة قوة، حتى لو كانت صفحة واحدة" },
-  { challenge: "اشرب كوب ماء إضافي اليوم 💧", motivation: "الماء يحافظ على صحتك ونشاطك" },
-  { challenge: "اكتب ٣ أشياء أنت ممتن لها اليوم ✍️", motivation: "الامتنان يجلب السعادة لحياتك" },
-  { challenge: "خذ نفسًا عميقًا ٥ مرات 🎐", motivation: "يساعد على تهدئة الأعصاب وتقليل التوتر" },
+  {
+    challenge: "ابتسم لشخص غريب اليوم 😊",
+    motivation: "الابتسامة معدية وتزيد الإيجابية",
+  },
+  {
+    challenge: "اقرأ صفحة واحدة من كتاب 📖",
+    motivation: "المعرفة قوة، حتى لو كانت صفحة واحدة",
+  },
+  {
+    challenge: "اشرب كوب ماء إضافي اليوم 💧",
+    motivation: "الماء يحافظ على صحتك ونشاطك",
+  },
+  {
+    challenge: "اكتب ٣ أشياء أنت ممتن لها اليوم ✍️",
+    motivation: "الامتنان يجلب السعادة لحياتك",
+  },
+  {
+    challenge: "خذ نفسًا عميقًا ٥ مرات 🎐",
+    motivation: "يساعد على تهدئة الأعصاب وتقليل التوتر",
+  },
 ];
 
 const DailyChallenge = () => {
@@ -25,7 +39,8 @@ const DailyChallenge = () => {
     if (savedChallenge && savedDate === today) {
       return JSON.parse(savedChallenge);
     } else {
-      const newChallenge = dailyChallenges[Math.floor(Math.random() * dailyChallenges.length)];
+      const newChallenge =
+        dailyChallenges[Math.floor(Math.random() * dailyChallenges.length)];
       localStorage.setItem("dailyChallenge", JSON.stringify(newChallenge));
       localStorage.setItem("challengeDate", today);
       return newChallenge;
@@ -37,7 +52,9 @@ const DailyChallenge = () => {
     setCompleted(savedCompletion === "true");
 
     // تقليل الحسابات العشوائية بحيث لا يتم تحديث المشاركة أكثر من اللازم
-    setParticipationRate(prevRate => prevRate || Math.floor(Math.random() * 50) + 50);
+    setParticipationRate(
+      (prevRate) => prevRate || Math.floor(Math.random() * 50) + 50
+    );
   }, []);
 
   const handleComplete = useCallback(() => {
@@ -58,9 +75,13 @@ const DailyChallenge = () => {
         {challenge.challenge}
       </motion.p>
 
-      <p className="mt-2 text-sm text-gray-200 italic">{challenge.motivation}</p>
+      <p className="mt-2 text-sm text-gray-200 italic">
+        {challenge.motivation}
+      </p>
 
-      <p className="mt-3 text-white">📊 {participationRate}% من المستخدمين أكملوا التحدي اليوم</p>
+      <p className="mt-3 text-white">
+        📊 {participationRate}% من المستخدمين أكملوا التحدي اليوم
+      </p>
 
       {!completed ? (
         <button
@@ -70,7 +91,9 @@ const DailyChallenge = () => {
           ✅ أتممت التحدي
         </button>
       ) : (
-        <p className="mt-4 text-lg text-yellow-300">🎉 رائع! لقد أنجزت التحدي اليوم</p>
+        <p className="mt-4 text-lg text-yellow-300">
+          🎉 رائع! لقد أنجزت التحدي اليوم
+        </p>
       )}
     </div>
   );

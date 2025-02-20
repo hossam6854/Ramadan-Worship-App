@@ -13,30 +13,28 @@ function QuranApp() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 py-2 px-2">
       <div className="container mx-auto px-4 py-8">
-      <header className="flex flex-wrap justify-between items-center mb-8 gap-4 sm:gap-6">
-      <div className="flex flex-wrap items-center gap-2 sm:gap-4 order-1 md:order-2">
-      <Link
-      to="/worship"
-      className="inline-flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
-    >
-      <Landmark className="mr-1 sm:mr-2 h-4 w-4" />
-      العبادات اليومية
-    </Link>
+        <header className="flex flex-wrap flex-row-reverse justify-between items-center mb-6 gap-4 md:gap-6">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 w-full md:w-auto text-center md:text-right ml-auto">
+            📖 القرآن الكريم
+          </h1>
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4">
+            <Link
+              to="/worship"
+              className="inline-flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+            >
+              <Landmark className="mr-1 sm:mr-2 h-4 w-4" />
+              العبادات اليومية
+            </Link>
 
-    <Link
-      to="/"
-      className="inline-flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
-    >
-      <HomeIcon className="mr-1 sm:mr-2 h-4 w-4" />
-      الرئيسية
-    </Link>
-  </div>
-
-  <h1 className="text-xl sm:text-2xl md:text-3xl font-bold w-full text-center md:w-auto md:text-right">
-    📖 القرآن الكريم
-  </h1>
-</header>
-
+            <Link
+              to="/"
+              className="inline-flex items-center px-3 sm:px-4 py-2 text-xs sm:text-sm font-medium text-gray-700 bg-white rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors"
+            >
+              <HomeIcon className="mr-1 sm:mr-2 h-4 w-4" />
+              الرئيسية
+            </Link>
+          </div>
+        </header>
 
         <div className="text-center mb-6">
           <button
@@ -49,9 +47,7 @@ function QuranApp() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div >
-            {showBookmarks ? <BookmarksList /> : <SurahList />}
-          </div>
+          <div>{showBookmarks ? <BookmarksList /> : <SurahList />}</div>
 
           {selectedSurah ? (
             <div className="lg:col-span-2 space-y-8">

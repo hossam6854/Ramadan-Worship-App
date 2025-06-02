@@ -14,7 +14,7 @@ const CountdownTimer = () => {
   };
 
   useEffect(() => {
-    const ramadanStart = moment("2025-03-01", "YYYY-MM-DD");
+    const ramadanStart = moment("2026-02-17", "YYYY-MM-DD");
 
     const updateTime = () => {
       const now = moment();
